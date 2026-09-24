@@ -1,0 +1,161 @@
+/* ==========================================================================
+   DESIGN SYSTEM - YESUNANA FINANCE ADMIN
+   Couleurs : #286DE2 (Bleu Principal), #193C76 (Bleu Foncé), #FFFFFF (Blanc)
+   ========================================================================== */
+
+:root {
+  --primary-blue: #286DE2;
+  --dark-blue: #193C76;
+  --white: #FFFFFF;
+  --bg-neutral: #F4F7FC;
+  --card-border: #E3E8EE;
+  
+  --text-main: #1A202C;
+  --text-muted: #64748B;
+  
+  --status-green: #00C853;
+  --status-green-bg: #E8F5E9;
+  --status-orange: #F59E0B;
+  --status-orange-bg: #FEF3C7;
+  --status-red: #EF4444;
+  --status-red-bg: #FEE2E2;
+  --status-blue: #286DE2;
+  --status-blue-bg: #E0EDFF;
+
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-subtle: 0 4px 12px rgba(25, 60, 118, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+}
+
+body {
+  background-color: var(--bg-neutral);
+  color: var(--text-main);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typographie */
+h1 { font-size: 24px; font-weight: 700; color: var(--dark-blue); }
+h2 { font-size: 18px; font-weight: 700; color: var(--dark-blue); }
+h3 { font-size: 15px; font-weight: 600; color: var(--text-main); }
+p { color: var(--text-muted); }
+
+/* Cartes KPI & Conteneurs */
+.card {
+  background: var(--white);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-subtle);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Badges de statut */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-pending { background: var(--status-orange-bg); color: var(--status-orange); }
+.badge-approved { background: var(--status-green-bg); color: var(--status-green); }
+.badge-rejected { background: var(--status-red-bg); color: var(--status-red); }
+
+/* Tableaux dynamiques */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  background: #FAFCFF;
+  padding: 14px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--card-border);
+}
+
+td {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-main);
+  font-size: 13.5px;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover { background-color: #F8FAFC; }
+
+/* Boutons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary { background: var(--primary-blue); color: var(--white); }
+.btn-primary:hover { background: #1D5BBF; }
+
+.btn-secondary { background: #E2E8F0; color: var(--text-main); }
+.btn-secondary:hover { background: #CBD5E1; }
+
+.btn-danger { background: var(--status-red); color: var(--white); }
+.btn-danger:hover { background: #DC2626; }
+
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* Inputs Formulaires */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-main);
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--card-border);
+  outline: none;
+  font-size: 14px;
+}
+
+.form-control:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(40, 109, 226, 0.15);
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin — Yesunana Finance</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar (Sections 7 & 8) -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo.png" alt="Logo" class="sidebar-logo" onerror="this.remove()">
+        <span class="sidebar-title">Yesunana Finance</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a href="#dashboard" class="sidebar-link active" data-view="dashboard">Dashboard</a></li>
+        <li class="sidebar-item"><a href="#users" class="sidebar-link" data-view="users">Utilisateurs</a></li>
+        <li class="sidebar-item"><a href="#deposits" class="sidebar-link" data-view="deposits">Dépôts</a></li>
+        <li class="sidebar-item"><a href="#withdrawals" class="sidebar-link" data-view="withdrawals">Retraits</a></li>
+        <li class="sidebar-item"><a href="#transactions" class="sidebar-link" data-view="transactions">Transactions</a></li>
+        <li class="sidebar-item"><a href="#settings" class="sidebar-link" data-view="settings">Paramètres</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#" id="logout-btn" class="sidebar-link" style="color: #EF4444;">Déconnexion</a>
+      </div>
+    </aside>
+
+    <!-- Content Area (Section 9) -->
+    <div class="main-wrapper">
+      <header class="header">
+        <h2 id="page-title">Dashboard</h2>
+        <div class="user-profile">
+          <div class="user-avatar" id="admin-avatar">A</div>
+          <div>
+            <div style="font-weight: 600;" id="admin-name">Administrateur</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Yesunana Admin</div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body" id="app-view">
+        <!-- Vues injectées dynamiquement par JS -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Modale Rejet Universelle -->
+  <div class="modal-overlay" id="reject-modal">
+    <div class="modal-box">
+      <h3>Motif du rejet</h3>
+      <p style="margin-bottom: 16px; font-size: 13px;">Veuillez indiquer la raison du rejet pour l'utilisateur.</p>
+      <form id="reject-form">
+        <input type="hidden" id="modal-item-id">
+        <div class="form-group">
+          <select id="reject-reason-select" class="form-control" required>
+            <option value="Transaction introuvable">Transaction introuvable</option>
+            <option value="Référence incorrecte">Référence incorrecte</option>
+            <option value="Montant incorrect">Montant incorrect</option>
+            <option value="Preuve insuffisante">Preuve insuffisante</option>
+            <option value="Autre">Autre motif...</option>
+          </select>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn btn-secondary" onclick="closeRejectModal()">Annuler</button>
+          <button type="submit" class="btn btn-danger">Confirmer le rejet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/supabase-client.js"></script>
+  <script src="js/views/dashboard.js"></script>
+  <script src="js/views/users.js"></script>
+  <script src="js/views/deposits.js"></script>
+  <script src="js/views/withdrawals.js"></script>
+  <script src="js/views/transactions.js"></script>
+  <script src="js/views/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
