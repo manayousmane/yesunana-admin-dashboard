@@ -5,62 +5,112 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion Administrateur — Yesunana Finance</title>
   <link rel="stylesheet" href="css/design-system.css">
+  <!-- SDK Supabase CDN obligatoire -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #193C76; }
-    .login-card { width: 100%; max-width: 400px; background: white; padding: 32px; border-radius: 16px; }
-    .login-logo { text-align: center; margin-bottom: 24px; font-size: 22px; font-weight: 800; color: #193C76; }
+    body { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      min-height: 100vh; 
+      background: #193C76; 
+      margin: 0;
+    }
+    .login-card { 
+      width: 100%; 
+      max-width: 400px; 
+      background: white; 
+      padding: 32px; 
+      border-radius: 16px; 
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    .login-logo { 
+      text-align: center; 
+      margin-bottom: 24px; 
+      font-size: 22px; 
+      font-weight: 800; 
+      color: #193C76; 
+    }
   </style>
 </head>
 <body>
 
   <div class="login-card">
     <div class="login-logo">
-      <!-- Emplacement propre du logo officiel -->
+      <!-- Emplacement du logo officiel -->
       <img src="assets/logo.png" alt="Yesunana Finance" style="max-height: 48px;" onerror="this.onerror=null; this.remove();">
       <div id="fallback-logo">YESUNANA FINANCE</div>
     </div>
     
-    <h2 style="margin-bottom: 8px; text-align: center;">Espace Administration</h2>
-    <p style="margin-bottom: 24px; text-align: center; font-size: 13px;">Connectez-vous pour gérer la plateforme</p>
+    <h2 style="margin-bottom: 8px; text-align: center; color: #193C76;">Espace Administration</h2>
+    <p style="margin-bottom: 24px; text-align: center; font-size: 13px; color: #64748B;">Connectez-vous pour gérer la plateforme</p>
 
     <form id="login-form">
       <div class="form-group">
-        <label>Adresse email</label>
-        <input type="email" id="email" class="form-control" placeholder="admin@yesunana.com" required>
+        <label for="email">Adresse email</label>
+        <input type="email" id="email" class="form-control" placeholder="admin@yesunana.com" required autocomplete="username">
       </div>
       <div class="form-group">
-        <label>Mot de passe</label>
-        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
       </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px;">Se connecter</button>
+      <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px;">
+        Se connecter
+      </button>
     </form>
   </div>
 
+  <!-- Charger le client Supabase -->
   <script src="js/supabase-client.js"></script>
+
   <script>
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
 
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      const emailInput = document.getElementById('email').value.trim();
+      const passwordInput = document.getElementById('password').value;
+      const submitBtn = document.getElementById('submit-btn');
 
-      if (error) {
-        alert('Identifiants incorrects : ' + error.message);
-      } else {
-        const { data: profile } = await supabaseClient
+      // Indication visuelle de chargement
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Connexion en cours...';
+
+      try {
+        // 1. Authentification Supabase
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ 
+          email: emailInput, 
+          password: passwordInput 
+        });
+
+        if (error) {
+          alert('Erreur de connexion : ' + error.message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Se connecter';
+          return;
+        }
+
+        // 2. Vérification du rôle dans la table profiles
+        const { data: profile, error: profileError } = await supabaseClient
           .from('profiles')
           .select('role')
           .eq('id', data.user.id)
           .single();
 
-        if (profile?.role === 'admin') {
-          window.location.href = 'dashboard.html';
-        } else {
-          alert('Accès réservé exclusivement aux administrateurs.');
+        if (profileError || profile?.role !== 'admin') {
+          alert('Accès refusé : Ce compte ne possède pas les privilèges administrateur.');
           await supabaseClient.auth.signOut();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Se connecter';
+          return;
         }
+
+        // 3. Redirection si Admin
+        window.location.href = 'dashboard.html';
+
+      } catch (err) {
+        alert('Une erreur inattendue est survenue : ' + err.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Se connecter';
       }
     });
   </script>
