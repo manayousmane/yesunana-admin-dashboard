@@ -27,8 +27,12 @@
 }
 
 .sidebar-logo {
-  max-height: 36px;
-  width: auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;         /* Forme circulaire */
+  padding: 5px;               /* Réduit le logo pour ne pas rogner les lettres */
+  background-color: #ffffff;  /* Fond blanc */
+  object-fit: contain;        /* Garde les proportions d'origine */
 }
 
 .sidebar-title {

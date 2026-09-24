@@ -5,9 +5,9 @@ async function renderDepositsView(container) {
         <input type="text" id="deposit-search" class="form-control" style="max-width: 300px;" placeholder="Rechercher par référence ou nom...">
         <div style="display: flex; gap: 8px;">
           <button class="btn btn-secondary btn-sm" onclick="loadDeposits('all')">Tous</button>
-          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('pending')">En attente (pending)</button>
-          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('approved')">Approuvés (approved)</button>
-          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('rejected')">Rejetés (rejected)</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('pending')">En attente</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('approved')">Approuvés</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('rejected')">Rejetés</button>
         </div>
       </div>
     </div>

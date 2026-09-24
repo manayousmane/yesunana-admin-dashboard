@@ -2,10 +2,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const authData = await checkAdminAuth();
   if (!authData) return;
 
-  document.getElementById('admin-name').textContent = authData.profile.full_name || 'Administrateur';
-  document.getElementById('admin-avatar').textContent = (authData.profile.full_name || 'A').charAt(0);
+  // Récupère le nom du profil s'il existe et n'est pas "Utilisateur", sinon met "Yesunana Admin"
+  const displayName = (authData.profile?.full_name && authData.profile.full_name !== 'Utilisateur') 
+    ? authData.profile.full_name 
+    : 'Yesunana Admin';
 
-  // Router de navigation
+  document.getElementById('admin-name').textContent = displayName;
+  document.getElementById('admin-avatar').textContent = displayName.charAt(0).toUpperCase();
+
+  // Écouteurs pour la navigation
   const links = document.querySelectorAll('.sidebar-link[data-view]');
   links.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -34,12 +39,12 @@ function navigateTo(viewName) {
 
   // Titles Update
   const titles = {
-    dashboard: 'Dashboard Overview',
-    users: 'Gestion des Utilisateurs',
-    deposits: 'Déclarations de Dépôts',
-    withdrawals: 'Demandes de Retraits',
-    transactions: 'Historique Général des Transactions',
-    settings: 'Paramètres du Pôle Financier'
+    dashboard: 'Dashboard',
+    users: 'Gestion des utilisateurs',
+    deposits: 'Déclarations de dépôts',
+    withdrawals: 'Demandes de retraits',
+    transactions: 'Historique des transactions',
+    settings: 'Paramètres'
   };
   document.getElementById('page-title').textContent = titles[viewName] || 'Dashboard';
 

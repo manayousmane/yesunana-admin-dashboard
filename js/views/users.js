@@ -6,7 +6,7 @@ async function renderUsersView(container) {
           <tr>
             <th>Nom Complet</th>
             <th>Téléphone</th>
-            <th>Solde Épargne (Savings)</th>
+            <th>Solde Épargne</th>
             <th>Solde Tontine</th>
             <th>Inscription</th>
           </tr>

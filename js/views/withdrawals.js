@@ -3,9 +3,9 @@ async function renderWithdrawalsView(container) {
     <div class="card" style="margin-bottom: 20px;">
       <div style="display: flex; gap: 8px;">
         <button class="btn btn-secondary btn-sm" onclick="loadWithdrawals('all')">Tous</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadWithdrawals('pending')">En attente (pending)</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadWithdrawals('approved')">Approuvés (approved)</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadWithdrawals('rejected')">Rejetés (rejected)</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadWithdrawals('pending')">En attente</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadWithdrawals('approved')">Approuvés</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadWithdrawals('rejected')">Rejetés</button>
       </div>
     </div>
 

@@ -20,25 +20,25 @@ async function renderDashboardView(container) {
   container.innerHTML = `
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 28px;">
       <div class="card">
-        <p>Utilisateurs Totaux</p>
+        <p>Utilisateurs totaux</p>
         <h1 style="margin-top: 8px;">${userCount || 0}</h1>
       </div>
       <div class="card">
-        <p>Total Soldes Épargne</p>
+        <p>Total soldes Épargne</p>
         <h1 style="margin-top: 8px; color: var(--primary-blue);">${totalSavings.toLocaleString()} FCFA</h1>
       </div>
       <div class="card">
-        <p>Total Soldes Tontine</p>
+        <p>Total soldes Tontine</p>
         <h1 style="margin-top: 8px;">${totalTontine.toLocaleString()} FCFA</h1>
       </div>
-      <div class="card" style="border-left: 4px solid var(--status-orange);">
-        <p>Opérations À Traiter</p>
-        <h1 style="margin-top: 8px; color: var(--status-orange);">${pendingTotal}</h1>
+      <div class="card" style="border-left: 4px solid var(--primary-blue);">
+        <p>Opérations à traiter</p>
+        <h1 style="margin-top: 8px; color: var(--primary-blue);">${pendingTotal}</h1>
       </div>
     </div>
 
-    <div class="card" style="margin-bottom: 28px; background: #FFFDF5; border-color: #FCD34D;">
-      <h3>⚡ Actions requises aujourd'hui</h3>
+    <div class="card" style="margin-bottom: 28px; background: #F4F8FF; border-color: #BFDBFE;">
+      <h3 style="color: var(--primary-blue);"> Actions requises aujourd'hui</h3>
       <div style="display: flex; gap: 32px; margin-top: 12px; align-items: center;">
         <div>Dépôts en attente : <strong>${pendingDeposits || 0}</strong></div>
         <div>Retraits en attente : <strong>${pendingWithdrawals || 0}</strong></div>

@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Admin — Yesunana Finance</title>
+  <!-- Icône d'onglet (Favicon) pour Chrome et les navigateurs -->
+<link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="stylesheet" href="css/design-system.css">
   <link rel="stylesheet" href="css/layout.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -32,17 +34,18 @@
 
     <!-- Content Area (Section 9) -->
     <div class="main-wrapper">
-      <header class="header">
-        <h2 id="page-title">Dashboard</h2>
-        <div class="user-profile">
-          <div class="user-avatar" id="admin-avatar">A</div>
-          <div>
-            <div style="font-weight: 600;" id="admin-name">Administrateur</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Yesunana Admin</div>
-          </div>
-        </div>
-      </header>
-
+<header class="header">
+  <h2 id="page-title">Dashboard</h2>
+  <div class="user-profile">
+    <div class="user-avatar" id="admin-avatar">A</div>
+    <div>
+      <div style="font-weight: 700; font-size: 15px; color: var(--dark-blue);" id="admin-name">
+        Yesunana Admin
+      </div>
+      <div style="font-size: 12px; color: var(--text-muted);">Administrateur</div>
+    </div>
+  </div>
+</header>
       <main class="content-body" id="app-view">
         <!-- Vues injectées dynamiquement par JS -->
       </main>
