@@ -1,12 +1,13 @@
 async function renderDepositsView(container) {
   container.innerHTML = `
     <div class="card" style="margin-bottom: 20px;">
-      <div style="display: flex; gap: 16px; justify-content: space-between;">
+      <div style="display: flex; gap: 16px; justify-content: space-between; flex-wrap: wrap;">
         <input type="text" id="deposit-search" class="form-control" style="max-width: 300px;" placeholder="Rechercher par référence ou nom...">
         <div style="display: flex; gap: 8px;">
           <button class="btn btn-secondary btn-sm" onclick="loadDeposits('all')">Tous</button>
-          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('En attente')">En attente</button>
-          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('Validé')">Approuvés</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('pending')">En attente (pending)</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('approved')">Approuvés (approved)</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadDeposits('rejected')">Rejetés (rejected)</button>
         </div>
       </div>
     </div>
@@ -18,14 +19,16 @@ async function renderDepositsView(container) {
             <th>Utilisateur</th>
             <th>Montant</th>
             <th>Opérateur</th>
-            <th>Téléphone</th>
+            <th>Expéditeur</th>
+            <th>Référence</th>
+            <th>Preuve</th>
             <th>Statut</th>
             <th>Date</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="deposits-tbody">
-          <tr><td colspan="7">Chargement des données Supabase...</td></tr>
+          <tr><td colspan="9">Chargement des dépôts...</td></tr>
         </tbody>
       </table>
     </div>
@@ -42,7 +45,7 @@ async function renderDepositsView(container) {
     const tbody = document.getElementById('deposits-tbody');
 
     if (error || !deposits || deposits.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Aucun dépôt trouvé.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;">Aucun dépôt correspondant.</td></tr>`;
       return;
     }
 
@@ -51,11 +54,13 @@ async function renderDepositsView(container) {
         <td><strong>${d.profiles?.full_name || 'Utilisateur'}</strong></td>
         <td><strong>${Number(d.amount).toLocaleString()} FCFA</strong></td>
         <td>${d.operator}</td>
-        <td>${d.phone_number}</td>
-        <td><span class="badge badge-${d.status === 'Validé' ? 'approved' : d.status === 'Rejeté' ? 'rejected' : 'pending'}">${d.status}</span></td>
+        <td>${d.sender_phone || 'N/A'}</td>
+        <td><code>${d.transaction_reference || 'N/A'}</code></td>
+        <td>${d.proof_url ? `<a href="${d.proof_url}" target="_blank" class="btn btn-secondary btn-sm">Voir</a>` : '-'}</td>
+        <td><span class="badge badge-${d.status === 'approved' ? 'approved' : d.status === 'rejected' ? 'rejected' : 'pending'}">${d.status}</span></td>
         <td>${new Date(d.created_at).toLocaleDateString('fr-FR')}</td>
         <td>
-          ${d.status === 'En attente' || d.status === 'pending' ? `
+          ${d.status === 'pending' ? `
             <button class="btn btn-primary btn-sm" onclick="approveDeposit('${d.id}')">Valider</button>
             <button class="btn btn-danger btn-sm" onclick="openRejectDepositModal('${d.id}')">Rejeter</button>
           ` : '-'}
@@ -67,14 +72,13 @@ async function renderDepositsView(container) {
   loadDeposits();
 }
 
-// Validation financière sécurisée via la fonction Supabase PostgreSQL (Section 19)
 async function approveDeposit(depositId) {
-  if (!confirm("Êtes-vous sûr de vouloir valider ce dépôt ? Le solde de l'utilisateur sera crédité automatiquement.")) return;
+  if (!confirm("Confirmer la validation du dépôt ? L'opération créditera le compte associé via la fonction PostgreSQL.")) return;
 
   const { error } = await supabaseClient.rpc('approve_deposit', { deposit_id: depositId });
 
   if (error) {
-    alert("Erreur lors de la validation : " + error.message);
+    alert("Erreur de validation : " + error.message);
   } else {
     alert("Dépôt validé avec succès !");
     loadDeposits();
