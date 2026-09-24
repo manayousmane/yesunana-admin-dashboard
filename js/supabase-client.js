@@ -1,7 +1,9 @@
 // Initialisation du client Supabase via CDN
 const SUPABASE_URL = 'https://utkufqgrcgtayossjila.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_MKa7CjF4FyHNP5ozCFhSNQ_TV7ZkAxv';
-//const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Attachement explicite à l'objet global 'window' (Décommenté et corrigé)
+window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Verification du role Admin lors de l'accès
 async function checkAdminAuth() {
