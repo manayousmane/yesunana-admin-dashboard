@@ -35,7 +35,7 @@ async function renderDepositsView(container) {
   `;
 
   window.loadDeposits = async function(filterStatus = 'all') {
-    let query = supabaseClient.from('deposit_requests').select('*, profiles(full_name)').order('created_at', { ascending: false });
+    let query = supabaseClient.from('deposit_requests').select('*, profiles!left(full_name)').order('created_at', { ascending: false });
     
     if (filterStatus !== 'all') {
       query = query.eq('status', filterStatus);

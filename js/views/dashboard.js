@@ -71,12 +71,7 @@ async function renderDashboardView(container) {
     </div>
   `;
 
-  const { data: recentDeposits } = await supabaseClient
-    .from('deposit_requests')
-    .select('*, profiles(full_name)')
-    .order('created_at', { ascending: false })
-    .limit(5);
-
+  const { data: recentDeposits } = await supabaseClient.from('deposit_requests').select('*, profiles!left(full_name)').order('created_at', { ascending: false }).limit(5);
   const tbody = document.getElementById('dashboard-recent-deposits');
   if (!recentDeposits || recentDeposits.length === 0) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Aucune déclaration récente.</td></tr>`;
