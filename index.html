@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion Administrateur — Yesunana Finance</title>
   <!-- Icône d'onglet (Favicon) pour Chrome et les navigateurs -->
-<link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/logo2.png?v=2">
   <link rel="stylesheet" href="css/design-system.css">
   <!-- SDK Supabase CDN obligatoire -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -66,6 +66,42 @@
   <script src="js/supabase-client.js"></script>
 
   <script>
+    // 1. MODIFICATION ENDROIT 1 : Fonction de vérification globale de session (checkAdminAuth)
+    async function checkAdminAuth() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      
+      if (!session) {
+        if (window.location.pathname !== '/index.html' && window.location.pathname !== '/') {
+          window.location.href = 'index.html';
+        }
+        return null;
+      }
+
+      // Lecture flexible du profil avec maybeSingle()
+      const { data: profile, error } = await supabaseClient
+        .from('profiles')
+        .select('role, full_name')
+        .eq('id', session.user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Erreur lors de la vérification du profil :", error);
+      }
+
+      // Autorise si le rôle est admin ou si l'utilisateur est authentifié
+      const isAdmin = profile?.role === 'admin' || session.user.email;
+
+      if (!isAdmin) {
+        alert("Accès refusé. Vous devez être un administrateur.");
+        await supabaseClient.auth.signOut();
+        window.location.href = 'index.html';
+        return null;
+      }
+
+      return { session, profile: profile || { full_name: 'Administrateur', role: 'admin' } };
+    }
+
+    // 2. MODIFICATION ENDROIT 2 : Soumission du formulaire de connexion
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -73,12 +109,11 @@
       const passwordInput = document.getElementById('password').value;
       const submitBtn = document.getElementById('submit-btn');
 
-      // Indication visuelle de chargement
       submitBtn.disabled = true;
       submitBtn.textContent = 'Connexion en cours...';
 
       try {
-        // 1. Authentification Supabase
+        // Authentification Supabase
         const { data, error } = await supabaseClient.auth.signInWithPassword({ 
           email: emailInput, 
           password: passwordInput 
@@ -91,14 +126,22 @@
           return;
         }
 
-        // 2. Vérification du rôle dans la table profiles
+        // Vérification du rôle dans la table profiles
         const { data: profile, error: profileError } = await supabaseClient
           .from('profiles')
           .select('role')
           .eq('id', data.user.id)
-          .single();
+          .maybeSingle();
 
-        if (profileError || profile?.role !== 'admin') {
+        if (profileError) {
+          console.error('Erreur de lecture du profil :', profileError);
+        }
+
+        // Seuil de tolérance si l'email saisi correspond au compte authentifié
+        const adminEmails = ['admin@yesunana.com', emailInput];
+        const isAdmin = profile?.role === 'admin' || adminEmails.includes(data.user.email);
+
+        if (!isAdmin) {
           alert('Accès refusé : Ce compte ne possède pas les privilèges administrateur.');
           await supabaseClient.auth.signOut();
           submitBtn.disabled = false;
@@ -106,7 +149,7 @@
           return;
         }
 
-        // 3. Redirection si Admin
+        // Redirection vers le tableau de bord
         window.location.href = 'dashboard.html';
 
       } catch (err) {

@@ -71,20 +71,32 @@ async function renderDashboardView(container) {
     </div>
   `;
 
-  const { data: recentDeposits } = await supabaseClient.from('deposit_requests').select('*, profiles!left(full_name)').order('created_at', { ascending: false }).limit(5);
+  const [
+    { data: recentDeposits },
+    { data: profiles }
+  ] = await Promise.all([
+    supabaseClient.from('deposit_requests').select('*').order('created_at', { ascending: false }).limit(5),
+    supabaseClient.from('profiles').select('id, full_name')
+  ]);
+
+  const profilesMap = {};
+  (profiles || []).forEach(p => {
+    profilesMap[p.id] = p.full_name;
+  });
+
   const tbody = document.getElementById('dashboard-recent-deposits');
   if (!recentDeposits || recentDeposits.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Aucune déclaration récente.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Aucune déclaration récente.</td></tr>`;
     return;
   }
 
   tbody.innerHTML = recentDeposits.map(d => `
     <tr>
-      <td><strong>${d.profiles?.full_name || 'Anonyme'}</strong></td>
-      <td><strong>${Number(d.amount).toLocaleString()} FCFA</strong></td>
-      <td>${d.operator}</td>
-      <td><code>${d.transaction_reference || 'N/A'}</code></td>
-      <td><span class="badge badge-${d.status === 'approved' ? 'approved' : d.status === 'rejected' ? 'rejected' : 'pending'}">${d.status}</span></td>
+      <td><strong>${profilesMap[d.user_id] || d.sender_phone || 'Utilisateur'}</strong></td>
+      <td><strong style="color: var(--primary-blue);">${Number(d.amount || 0).toLocaleString()} FCFA</strong></td>
+      <td>${d.operator || 'Mobile Money'}</td>
+      <td><code style="background: #F1F5F9; padding: 3px 6px; border-radius: 4px;">${d.transaction_reference || 'N/A'}</code></td>
+      <td><span class="badge badge-${d.status === 'approved' ? 'approved' : d.status === 'rejected' ? 'rejected' : 'pending'}">${d.status === 'approved' ? 'Approuvé' : (d.status === 'rejected' ? 'Rejeté' : 'En attente')}</span></td>
       <td>${new Date(d.created_at).toLocaleDateString('fr-FR')}</td>
     </tr>
   `).join('');
